@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.Toast;
 
 
 import java.io.File;
@@ -27,12 +28,21 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     Button searchBtn;
     String[] download = {};
+    int TotalDirectories = 0;
+    List<String> File = new ArrayList<String>();
+    List<String> Directories = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+       // Toast.makeText(getApplicationContext(),"There are total "+ getalldirectories().length +" directories", Toast.LENGTH_SHORT).show();
+
         download=   setautocomplete();
+
+        Toast.makeText(getApplicationContext(),"root is "+ Environment.getExternalStorageDirectory().getPath(), Toast.LENGTH_SHORT).show();
+
         //Creating the instance of ArrayAdapter containing list of fruit names
         ArrayAdapter<String> adapter = new ArrayAdapter<String>
                 (this, android.R.layout.select_dialog_item, download);
@@ -56,11 +66,255 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        getfilerecursive();
+        Toast.makeText(getApplicationContext(),"total files are "+ File.size() +" total directories are "+TotalDirectories, Toast.LENGTH_LONG).show();
 
 
     }
 
+
+    public void getfilerecursive()
+
+    {
+
+        AddDir( getDirbypath(Environment.getExternalStorageDirectory().getPath()));
+        AddFiles(getFilebypath(Environment.getExternalStorageDirectory().getPath()));
+
+        Recursive(Directories);
+
+    }
+
+
+
+    public boolean AddFiles(String[] Files)
+    {
+        try
+        {
+            for (String item : Files)
+            {
+
+                File.add(item);
+
+            }
+            return false;
+        }
+        catch (Exception ex)
+        {
+          ///  GC.Collect();
+          //  GC.WaitForPendingFinalizers();
+            return false;
+        }
+
+    }
+
+
+    public void AddDir(String[] Dir)
+    {
+        try
+        {
+            for(String item : Dir)
+            {
+                TotalDirectories += 1;
+
+                Directories.add(item);
+            }
+        }
+        catch (Exception ex)
+        {
+         //   GC.Collect();
+           // GC.WaitForPendingFinalizers();
+
+        }
+
+    }
+    public boolean IsDirectoryEmpty(String path)
+    {
+        try
+        {
+
+            File directory = new File(path);
+            File[] contents = directory.listFiles();
+// the directory file is not really a directory..
+            if (contents == null) {
+
+            }
+// Folder is empty
+            else if (contents.length == 0) {
+return true;
+            }
+// Folder contains files
+            else {
+return false;
+            }
+
+
+        }
+        catch (Exception ex)
+        {
+          //  GC.Collect();
+          //  GC.WaitForPendingFinalizers();
+
+        }
+        return true;
+    }
+
+    public void Recursive(List<String> Dirs)
+    {
+        boolean FileFound = false;
+        try
+        {
+
+            for (int x = 0; x < Dirs.size(); x++)
+            {
+                if (IsDirectoryEmpty(Directories.get(x))==false)
+                {
+
+                    AddDir(getDirbypath(Directories.get(x)));
+
+
+                    if (AddFiles( getFilebypath(Directories.get(x))))
+                    {
+                        FileFound = true;
+                        break;
+                    }
+                    else
+                    {
+                        AddFiles(getFilebypath(Directories.get(x)));
+                    }
+
+
+
+                }
+                Directories.remove(x);
+            }
+            if (Directories.size() > 0 && FileFound==false)
+            {
+                Recursive(Directories);
+            }
+        }
+        catch (Exception ex)
+        {
+
+           // GC.Collect();
+            //GC.WaitForPendingFinalizers();
+        }
+
+    }
+
+    public void getfilesrecursively(){
+
+        try{
+
+            AddDir(getalldirectoriesfromroot());
+            AddFiles(getallfilesfromroot());
+
+            Recursive(Directories);
+
+        }
+        catch (Exception ex){
+
+
+        }
+    }
+
+public String[] getDirbypath(String path){
+    List<String> dir = new ArrayList<String>();
+        try{
+
+            File root = new File( path);
+
+            File[] directories = root.listFiles();
+            for (File inFile : directories) {
+                if (inFile.isDirectory()) {
+                    dir.add(inFile.getPath());
+                }
+            }
+        }
+
+        catch (Exception ex){
+
+
+        }
+    String[] alldir = new String[dir.size()];
+    alldir = dir.toArray(alldir);
+        return  alldir;
+}
+
+
+    public String[] getFilebypath(String path){
+        List<String> files = new ArrayList<String>();
+        try{
+
+            File root = new File( path);
+
+            File[] directories = root.listFiles();
+            for (File inFile : directories) {
+                if (inFile.isFile()) {
+                    files.add(inFile.getPath());
+                }
+            }
+        }
+
+        catch (Exception ex){
+
+
+        }
+        String[] allfiles = new String[files.size()];
+        allfiles = files.toArray(allfiles);
+        return  allfiles;
+    }
+
+
+    public String[] getallfilesfromroot()
+    {
+        List<String> file = new ArrayList<String>();
+        try{
+
+            File root = Environment.getExternalStorageDirectory();
+
+            File[] directories = root.listFiles();
+            for (File inFile : directories) {
+                if (inFile.isFile()) {
+                    file.add(inFile.getName());
+                }
+            }
+
+        }
+        catch (Exception ex){
+
+
+        }
+        String[] allfiles = new String[file.size()];
+        allfiles = file.toArray(allfiles);
+        return  allfiles;
+
+    }
+
+
+    public String[] getalldirectoriesfromroot()
+    {
+        List<String> dir = new ArrayList<String>();
+    try{
+
+        File root = Environment.getExternalStorageDirectory();
+
+        File[] directories = root.listFiles();
+        for (File inFile : directories) {
+            if (inFile.isDirectory()) {
+                dir.add(inFile.getName());
+            }
+        }
+
+    }
+        catch (Exception ex){
+
+
+        }
+        String[] alldirectories = new String[dir.size()];
+        alldirectories = dir.toArray(alldirectories);
+        return  alldirectories;
+
+    }
     public String[] setautocomplete(){
 
         try {
