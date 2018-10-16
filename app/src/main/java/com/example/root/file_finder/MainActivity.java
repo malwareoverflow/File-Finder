@@ -38,21 +38,11 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
        // Toast.makeText(getApplicationContext(),"There are total "+ getalldirectories().length +" directories", Toast.LENGTH_SHORT).show();
-        getfilerecursive();
-        Toast.makeText(getApplicationContext(),"total files are "+ File.size() +" total directories are "+TotalDirectories, Toast.LENGTH_LONG).show();
 
-        download=   setautocomplete();
 
-        Toast.makeText(getApplicationContext(),"root is "+ Environment.getExternalStorageDirectory().getPath(), Toast.LENGTH_SHORT).show();
 
-        //Creating the instance of ArrayAdapter containing list of fruit names
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>
-                (this, android.R.layout.select_dialog_item, download);
-        //Getting the instance of AutoCompleteTextView
-        AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
-        actv.setThreshold(1);//will start working from first character
-        actv.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
-        actv.setTextColor(Color.RED);
+    //    Toast.makeText(getApplicationContext(),"root is "+ Environment.getExternalStorageDirectory().getPath(), Toast.LENGTH_SHORT).show();
+
 
 
 
@@ -68,7 +58,17 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        getfilerecursive();
+        Toast.makeText(getApplicationContext(),"total files are "+ File.size() +" total directories are "+TotalDirectories, Toast.LENGTH_LONG).show();
+        download=   setautocomplete();
+        //Creating the instance of ArrayAdapter containing list of fruit names
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>
+                (this, android.R.layout.select_dialog_item, download);
+        //Getting the instance of AutoCompleteTextView
+        AutoCompleteTextView actv = (AutoCompleteTextView) findViewById(R.id.autoCompleteTextView);
+        actv.setThreshold(1);//will start working from first character
+        actv.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
+        actv.setTextColor(Color.RED);
 
     }
 
