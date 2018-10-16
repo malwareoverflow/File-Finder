@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
        // Toast.makeText(getApplicationContext(),"There are total "+ getalldirectories().length +" directories", Toast.LENGTH_SHORT).show();
+        getfilerecursive();
+        Toast.makeText(getApplicationContext(),"total files are "+ File.size() +" total directories are "+TotalDirectories, Toast.LENGTH_LONG).show();
 
         download=   setautocomplete();
 
@@ -66,8 +68,6 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        getfilerecursive();
-        Toast.makeText(getApplicationContext(),"total files are "+ File.size() +" total directories are "+TotalDirectories, Toast.LENGTH_LONG).show();
 
 
     }
@@ -315,28 +315,31 @@ public String[] getDirbypath(String path){
         return  alldirectories;
 
     }
+
+
+
     public String[] setautocomplete(){
 
         try {
 
-  String path =Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+ // String path =Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
 
-            File directory = new File(path);
-            File[] files = directory.listFiles();
-            List<String> downloadfiles = new ArrayList<String>();
-
-
+         //   File directory = new File(path);
+         //   File[] files = directory.listFiles();
+          //  List<String> downloadfiles = new ArrayList<String>();
 
 
-            for (int i = 0; i < files.length; i++)
-            {
 
-                downloadfiles.add(files[i].getName());
 
-            }
-            String[] dwnldfiles = new String[downloadfiles.size()];
-            dwnldfiles = downloadfiles.toArray(dwnldfiles);
-          return  dwnldfiles;
+         //   for (int i = 0; i < files.length; i++)
+        //    {
+
+             //   downloadfiles.add(files[i].getName());
+
+       //    }
+            String[] allfiles = new String[File.size()];
+            allfiles = File.toArray(allfiles);
+          return  allfiles;
         }
         catch (Exception ex){
             String[] Months = new String[] { "January", "February",
